@@ -1,5 +1,5 @@
 const express = require('express');
-const dotenv = require('dotenv');
+const dotenv = require('dotenv').config();
 
 const cors = require('cors');
 const passport = require('passport');
@@ -14,10 +14,10 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const db = require('./config/mysqlorm.config');
 
 // Routes
-
+const authRoute = require('./routes/auth.routes');
 
 // Middleware
-const verifyTimeRange = require('./middleware/verifyTimeRange');
+
 const sessionStore = new SequelizeStore({
   db: db.sequelize,
 });
@@ -59,7 +59,7 @@ const authController = require('./controllers/auth.controllers');
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./utils/strategy')(passport); // Import Passport strategies
+// Import Passport strategies
 
 
 
@@ -74,15 +74,15 @@ app.use('/api/auth', authRoute);
 db.sequelize
   .authenticate()
   .then(() => {
-    logger.info('Database connection has been established successfully.');
+    console.log('Database connection has been established successfully.');
 
     // Start the server
     app.listen(process.env.PORT, () => {
-      logger.info(`Server is running on http://localhost:${process.env.PORT}`);
+      console.log(`Server is running on http://localhost:${process.env.PORT}`);
     });
   })
   .catch((err) => {
-    logger.warn('Unable to connect to the database:', err);
+    console.log('Unable to connect to the database:', err);
   });
 
 module.exports = app;
