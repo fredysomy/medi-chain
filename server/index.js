@@ -61,7 +61,7 @@ app.use(passport.session());
 
 // Import Passport strategies
 
-
+require("./utils/strategy")(passport)
 
 // Routes
 app.get('/', (req, res) => {
