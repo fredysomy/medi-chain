@@ -4,6 +4,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
+router.post('/register', authController.register);
 router.get('/checkSessionExist', authController.checkSessionExist);
 
 router.get('/openid', passport.authenticate('openidconnect'));
