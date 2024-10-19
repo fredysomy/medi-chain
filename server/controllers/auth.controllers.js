@@ -1,8 +1,10 @@
 const passport = require('passport');
 const checkCredentials = require('../utils/checkCredentials');
 const User = require('../models/users');
+const db=require("../config/mysqlorm.config")
 const uuid = require('uuid');
 const { encrypt } = require('../utils/enc_and_dec');
+const bcrypt = require('bcrypt');
 const login = (req, res, next) => {
   passport.authenticate('local', async (err, user, info) => {
     if (err) {
@@ -59,11 +61,13 @@ const register = async (req, res) => {
   if (!username || !email || !password) {
     return res.status(400).json({ message: 'Invalid request' });
   }
-
-
+  if(User(db.sequelize).findOne({ where: { email: email } })){
+    return res.status(400).json({ message: 'User already exists' });
+  }
   try {
-    const enckey=await encrypt()
-    const user = await User.create({ username, email, password, uuid: uuid.v4() ,seckey:enckey });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const enckey = await encrypt();
+    const user = await User(db.sequelize).create({ name:username, email:email, password: hashedPassword, uuid: uuid.v4(), seckey: enckey });
     return res.status(201).json({ message: 'User created' });
   } catch (err) {
     console.error('User create error:', err);
