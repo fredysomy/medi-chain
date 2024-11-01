@@ -6,4 +6,4 @@ const Nav = () => {
     <div>Nav Bar</div>
   )
 }
-export default Home; 
+export default Nav; 
