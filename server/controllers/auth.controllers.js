@@ -5,6 +5,7 @@ const db=require("../config/mysqlorm.config")
 const uuid = require('uuid');
 const { encrypt } = require('../utils/enc_and_dec');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const login = (req, res, next) => {
   passport.authenticate('local', async (err, user, info) => {
     if (err) {
@@ -24,7 +25,7 @@ const login = (req, res, next) => {
       // Save user details in session
       req.session.userid = user.id;
       req.session.email = user.email;
-      req.session.role = user.role;
+      req.session.role = "user";
       // Save the session data
       req.session.save((err) => {
         if (err) {
@@ -77,20 +78,22 @@ const register = async (req, res) => {
 
 const checkSessionExist = (req, res) => {
   console.log('Checking session');
-  console.log(req.session.passport)
+  console.log(req.session)
   if (req.session.passport?.user && ( req.session.passport?.user.username || req.session.passport?.user.email)) {
-    res.status(200).json({ message: 'Session exists' });
+    res.status(200).json({ message: 'Session exists', user: req.session.passport });
   } else {
     res.status(401).json({ message: 'Session does not exist' });
   }
 };
 
 const openidcallback = async (req, res) => {
+  console.log("dfdsfsdfsdf")
+  console.log(req)
   const data = jwt.decode(req.authInfo);
 
   req.session.userid = req.user.id;
   req.session.email ="asdasdasdasd";
-  req.session.role = 'user';
+  req.session.role = 'doctor';
   console.log(data)
 
   // Save the session data
@@ -99,7 +102,7 @@ const openidcallback = async (req, res) => {
       console.error('Session save error:', err);
       return res.status(500).json({ message: 'Internal server error' });
     }
-    return res.status(302).redirect('https://meetf.blackswitch.in/meet/dashboard');
+    return res.json({ message: 'Login successful' });
   });
 };
 module.exports = {
