@@ -15,6 +15,7 @@ const db = require('./config/mysqlorm.config');
 
 // Routes
 const authRoute = require('./routes/auth.routes');
+const docAuthRoute = require('./routes/docauth.routes');
 
 // Middleware
 
@@ -69,6 +70,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoute);
+app.use("/api/doctor_auth",docAuthRoute)
 
 
 db.sequelize
