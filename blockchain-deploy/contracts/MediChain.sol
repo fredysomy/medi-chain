@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Medichain {
+contract MediChain {
     struct Post {
         uint256 postId;
         string name;
@@ -27,7 +27,7 @@ contract Medichain {
         users[userUlid] = User({
             userUlid: userUlid,
             name: name,
-            posts: new uint256[]
+            posts: new uint256[](0)
         });
     }
 

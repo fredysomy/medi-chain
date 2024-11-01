@@ -1,11 +1,11 @@
 // scripts/deploy.js
 async function main() {
     const hre = require("hardhat");
-    const SimpleStorage = await hre.ethers.getContractFactory("SimpleStorage");
-    const simpleStorage = await SimpleStorage.deploy();
+    const MediChain = await hre.ethers.getContractFactory("MediChain");
+    const medichain = await MediChain.deploy();
 
-    await simpleStorage.deployed();
-    console.log("SimpleStorage deployed to:", simpleStorage.address);
+    await medichain.deployed();
+    console.log("Medichain deployed to:", medichain.address);
 }
 
 main().catch((error) => {
