@@ -10,11 +10,21 @@ router.get('/openid', passport.authenticate('openidconnect'));
 router.get(
   '/callback',
   passport.authenticate('openidconnect', {
-    successRedirect: 'https://meetf.blackswitch.in/meet/dashboard',
-    failureRedirect: 'https://meetf.blackswitch.in/',
+    
+    failureMessage: true,
   }),
-  authController.openidcallback
+  (req, res, next) => {
+    try {
+      console.log("Authentication successful.");
+      authController.openidcallback(req, res);
+    } catch (error) {
+      console.error("Error in openidcallback:", error);
+      res.redirect('/login');
+    }
+  }
 );
+
+
 
 
 

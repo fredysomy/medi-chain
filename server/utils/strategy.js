@@ -1,7 +1,7 @@
-const LocalStrategy = require('passport-local').Strategy;
-const OpenIDConnectStrategy = require('passport-openidconnect').Strategy;
-const checkCredentials = require('../utils/checkCredentials');
-const jwt = require('jsonwebtoken');
+const LocalStrategy = require("passport-local").Strategy;
+const OpenIDConnectStrategy = require("passport-openidconnect").Strategy;
+const checkCredentials = require("../utils/checkCredentials");
+const jwt = require("jsonwebtoken");
 module.exports = (passport) => {
   passport.serializeUser((user, done) => {
     done(null, user);
@@ -22,10 +22,11 @@ module.exports = (passport) => {
         clientID: process.env.OPENID_CLIENT_ID,
         clientSecret: process.env.OPENID_CLIENT_SECRET,
         callbackURL: process.env.OPENID_CALLBACK_URL,
-        scope:"openid profile email",
+        scope: "openid profile email",
       },
       (
         issuer,
+        req,
         profile,
         context,
         idToken,
@@ -34,8 +35,9 @@ module.exports = (passport) => {
         params,
         done
       ) => {
-       
-        
+        console.log("profile", profile);
+        console.log(accessToken, idToken, profile);
+
         done(null, profile, accessToken, idToken);
       }
     )
@@ -44,8 +46,8 @@ module.exports = (passport) => {
   passport.use(
     new LocalStrategy(
       {
-        usernameField: 'email',
-        passwordField: 'password',
+        usernameField: "email",
+        passwordField: "password",
       },
       async (username, password, done) => {
         try {
@@ -54,7 +56,7 @@ module.exports = (passport) => {
             return done(null, user);
           } else {
             return done(null, false, {
-              message: 'Incorrect username or password.',
+              message: "Incorrect username or password.",
             });
           }
         } catch (err) {
