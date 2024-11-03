@@ -21,7 +21,7 @@ const Record = ({ title, center, date, onDelete }) => {
         >
           Delete Record
         </button>
-        <button className="px-6 py-1 rounded-full bg-teal-600 text-white font-medium hover:bg-teal-700">
+        <button className="px-6 py-1 rounded-full bg-teal-600 text-white font-medium hover:bg-teal-700" >
           View
         </button>
       </div>
