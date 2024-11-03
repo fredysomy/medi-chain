@@ -2,7 +2,7 @@ import React from 'react';
 
 const Record = ({ title, center, date, onDelete }) => {
   return (
-    <div className="flex flex-row gap-28 p-4 border rounded-lg shadow-md max-w-md bg-white">
+    <div className="flex flex-row  p-4 border rounded-lg shadow-md  justify-between max-w-full bg-white">
       <div className="flex flex-col justify-between items-start">
         <div>
           <h2 className="text-lg font-semibold">{title}</h2>
@@ -14,7 +14,7 @@ const Record = ({ title, center, date, onDelete }) => {
         </div>
       </div>
       
-      <div className="mt-4 flex flex-col justify-between">
+      <div className="mt-4 flex flex-col justify-between items-end">
         <button 
           className="text-red-500 min-w-[105%] text-sm"
           onClick={onDelete}
