@@ -15,20 +15,20 @@ function Login() {
       className="relative min-h-screen flex flex-col items-center justify-end bg-cover bg-center pt-32"
       style={{ backgroundImage: `url(${backgroundImage})`, height: "100vh" }}
     >
-      {/* Overlay Color */}
+    
       <div className="absolute inset-0 bg-teal-700 opacity-70"></div>
 
-      {/* Main Content */}
+     
       <div className="relative z-10 flex flex-col items-center w-full max-w-md mb-20 px-6">
-        {/* "Medi-chain" Title Positioned Above the Form */}
+        
         <h1 className="text-5xl font-bold text-white mb-6">Medi-chain</h1>
 
-        {/* Login Form Container */}
+       
         <div className="w-full p-10 bg-white rounded-[30px] shadow-lg">
           <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Login</h2>
 
           <form className="space-y-6">
-            {/* Email Field */}
+           
             <div className="flex flex-col">
               <label className="text-gray-700 font-semibold">Mail id</label>
               <input
@@ -41,7 +41,7 @@ function Login() {
               />
             </div>
 
-            {/* Password Field */}
+            
             <div className="flex flex-col">
               <label className="text-gray-700 font-semibold">Password</label>
               <div className="relative">
@@ -63,7 +63,7 @@ function Login() {
               </div>
             </div>
 
-            {/* Sign In Button */}
+        
             <button
               type="submit"
               className="w-full py-3 mt-4 text-white font-semibold bg-teal-600 rounded-full hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2"
@@ -72,7 +72,7 @@ function Login() {
             </button>
           </form>
 
-          {/* Registration Link */}
+          
           <p className="mt-4 text-center text-gray-600">
             Don’t have an account? <a href="#register" className="text-teal-600 font-semibold hover:underline">Please Register</a>
           </p>
