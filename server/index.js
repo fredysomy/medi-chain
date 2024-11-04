@@ -1,5 +1,5 @@
 const express = require('express');
-const dotenv = require('dotenv').config();
+const dotenv = require('dotenv');
 
 const cors = require('cors');
 const passport = require('passport');
@@ -9,7 +9,11 @@ const session = require('express-session');
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: `${__dirname}/.env` });
+} else {
+  dotenv.config({ path: `${__dirname}/.env.local` });
+}
 // Configs
 const db = require('./config/mysqlorm.config');
 
