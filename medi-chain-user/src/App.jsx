@@ -5,6 +5,9 @@ import AllRecords from './pages/allRecord';
 import Navbar from './components/navbar';
 import Login from "./pages/login";
 import ViewRecord from "./pages/viewrecords"
+import View from "./pages/Viewprofile"
+import Firstpage from "./pages/Landingpage"
+
 function App() {
 
   return (
@@ -18,6 +21,8 @@ function App() {
           <Route path="/login"   element={<Login/>} />
           <Route path="/viewrecord/:id"   element={<ViewRecord/>} />
           
+          <Route path="/Viewprofile" element={<View/>} />
+          <Route path="/landingpage" element={<Firstpage/>} />
         
         
         </Routes>

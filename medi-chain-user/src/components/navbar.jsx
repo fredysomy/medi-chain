@@ -15,10 +15,10 @@ const Navbar = () => {
         
         {/* Desktop Links */}
         <div className="hidden md:flex items-center space-x-6">
-        <Link to="/" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Home</Link>
-          <Link to="/allrecords" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">My Records</Link>
-          <Link to="/team" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Add Records</Link>
-          <Link to="/pricing" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Profile</Link>
+        <Link to="/"  className="my-2 hover:text-teal-400">Home</Link>
+          <Link to="/allrecords"  className="my-2 hover:text-teal-400">My Records</Link>
+          <Link to="/team"  className="my-2 hover:text-teal-400">Add Records</Link>
+          <Link to="/viewprofile"  className="my-2 hover:text-teal-400">Profile</Link>
           <button className="bg-white text-teal-600 px-4 py-1 rounded-md font-medium hover:bg-gray-100">
             Sign Up
           </button>
@@ -45,7 +45,7 @@ const Navbar = () => {
           <Link to="/" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Home</Link>
           <Link to="/allrecords" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">My Records</Link>
           <Link to="/team" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Add Records</Link>
-          <Link to="/pricing" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Profile</Link>
+          <Link to="/viewprofile" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Profile</Link>
           <button
             onClick={toggleMobileMenu}
             className="bg-teal-600 text-white px-6 py-2 rounded-md font-medium mt-4 hover:bg-teal-700"

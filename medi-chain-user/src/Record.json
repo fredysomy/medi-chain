@@ -11,7 +11,7 @@
     },
     {
       "id": 2,
-      "title": "CT - SCAN",
+      "title": "Mri - SCAN",
       "center": "Healthy Family Centre",
       "date": "Monday, 27 March 2023",
        "img":"https://via.placeholder.com/60",
@@ -21,7 +21,7 @@
     },
     {
       "id": 3,
-      "title": "CT - SCAN",
+      "title": "Brrain - SCAN",
       "center": "Healthy Family Centre",
       "date": "Monday, 27 March 2023",
        "img":"https://via.placeholder.com/60",
@@ -31,7 +31,7 @@
     },
     {
       "id": 4,
-      "title": "CT - SCAN",
+      "title": "IT - SCAN",
       "center": "Healthy Family Centre",
       "date": "Monday, 27 March 2023",
        "img":"https://via.placeholder.com/60",

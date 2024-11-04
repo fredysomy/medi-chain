@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const PatientCard = () => {
   return (
     <div className="flex flex-col max-w-md rounded-lg shadow-md bg-gray-200">
@@ -20,9 +20,11 @@ const PatientCard = () => {
         </div>
       </div>
       <div className="flex justify-end mt-4 px-4 pb-2">
-        <button className="w-[25%] py-2 rounded-full bg-teal-600 text-white font-medium hover:bg-teal-700">
-          View
-        </button>
+      <Link to={`/viewprofile`} className="w-[25%] py-2 flex justify-center items-center rounded-full bg-teal-600 text-white font-medium hover:bg-teal-700">
+  View
+</Link>
+
+       
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
-
-const Record = ({ title, center, date, onDelete }) => {
+import { Link } from 'react-router-dom';
+const Record = ({ id,title, center, date, onDelete }) => {
   return (
     <div className="flex flex-row  p-4 border rounded-lg shadow-md  justify-between max-w-full bg-white">
       <div className="flex flex-col justify-between items-start">
@@ -21,9 +21,10 @@ const Record = ({ title, center, date, onDelete }) => {
         >
           Delete Record
         </button>
-        <button className="px-6 py-1 rounded-full bg-teal-600 text-white font-medium hover:bg-teal-700" >
-          View
-        </button>
+        <Link to={`/viewrecord/${id}`} className="px-6 py-1 rounded-full bg-teal-600 text-white font-medium hover:bg-teal-700">
+  View
+</Link>
+        
       </div>
     </div>
   );
