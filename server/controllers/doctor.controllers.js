@@ -1,7 +1,8 @@
 const User = require("../models/users");
 exports.getUserById = async (req, res) => {
-  const { id } = req.params;
-  const user = await User(db.sequelize).findOne({ where: { id: id } });
+  console.log(req);
+  const { id } = req.query;
+  const user = await User(db.sequelize).findOne({ where: { uuid: id } });
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
