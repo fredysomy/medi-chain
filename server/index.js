@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 const cors = require("cors");
 const passport = require("passport");
-
+const Multer = require('multer');
 const session = require("express-session");
 
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
@@ -21,7 +21,7 @@ const authRoute = require("./routes/auth.routes");
 const docAuthRoute = require("./routes/docauth.routes");
 const docMethodRoute = require("./routes/doctor_method.routes");
 const userMethodRoute = require("./routes/user_method.routes");
-
+const fileUploadRoute = require("./routes/file.routes");
 // Middleware
 const checkSessionUser = require("./middlewere/checkUser");
 
@@ -77,21 +77,29 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoute);
 app.use("/api/doctor_auth", docAuthRoute);
 app.use("/api/doctor_methods", docMethodRoute);
-app.use("/api/user_methods", checkSessionUser,userMethodRoute);
+app.use("/api/user_methods", checkSessionUser, userMethodRoute);
+const multer = Multer({ storage: Multer.memoryStorage() });
+
+app.use("/api/uploads", multer.single('profile'), fileUploadRoute);
+
+
 (async () => {
   try {
-    
-    const isBucketExists = await minioClient.bucketExists('profilepics_medichain');
-    
+    const isBucketExists = await minioClient.bucketExists(
+      "profilepicsmedichain"
+    );
+
     if (!isBucketExists) {
-      await minioClient.makeBucket('profilepics_medichain', 'us-east-1');
-      logger.info('Profile pics bucket created successfully');
+      await minioClient.makeBucket("profilepicsmedichain", "us-east-1");
+      console.log("Profile pics bucket created successfully");
     }
-    logger.info('Buckets exist/created');
+    console.log("Buckets exist/created");
   } catch (err) {
     console.log(err);
   }
 })();
+
+
 
 db.sequelize
   .authenticate()
