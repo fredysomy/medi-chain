@@ -9,3 +9,10 @@ exports.getUserById = async (req, res) => {
   const { password,seckey, ...rest } = user.dataValues;
   return res.status(200).json({ rest });
 };
+
+
+
+exports.createEntry = async (req, res) => {
+
+
+}
