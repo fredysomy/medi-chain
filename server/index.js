@@ -15,13 +15,15 @@ if (process.env.NODE_ENV === "production") {
 }
 // Configs
 const db = require("./config/mysqlorm.config");
-
+const minioClient = require("./config/minio.config");
 // Routes
 const authRoute = require("./routes/auth.routes");
 const docAuthRoute = require("./routes/docauth.routes");
 const docMethodRoute = require("./routes/doctor_method.routes");
+const userMethodRoute = require("./routes/user_method.routes");
 
 // Middleware
+const checkSessionUser = require("./middlewere/checkUser");
 
 const sessionStore = new SequelizeStore({
   db: db.sequelize,
@@ -75,6 +77,21 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoute);
 app.use("/api/doctor_auth", docAuthRoute);
 app.use("/api/doctor_methods", docMethodRoute);
+app.use("/api/user_methods", checkSessionUser,userMethodRoute);
+(async () => {
+  try {
+    
+    const isBucketExists = await minioClient.bucketExists('profilepics_medichain');
+    
+    if (!isBucketExists) {
+      await minioClient.makeBucket('profilepics_medichain', 'us-east-1');
+      logger.info('Profile pics bucket created successfully');
+    }
+    logger.info('Buckets exist/created');
+  } catch (err) {
+    console.log(err);
+  }
+})();
 
 db.sequelize
   .authenticate()
