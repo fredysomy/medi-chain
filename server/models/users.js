@@ -65,6 +65,42 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "seckey"
+    },
+    img_url: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "img_url"
+    },
+    dob: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "dob"
+    },
+    age: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "age"
+    },
+    blood_group: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "blood_group"
     }
   };
   const options = {
