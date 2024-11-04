@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import doctorImage from '../assets/Doctor image.jpeg'; // Replace with your actual image path
+import { Link } from 'react-router-dom';
 
 function MediChainIntro() {
-  const [buttonClicked, setButtonClicked] = useState(false);
 
-  const handleGetStarted = () => {
-    console.log('Get Started clicked');
-    setButtonClicked(true);
-  };
+
 
   return (
     <div className="min-h-screen flex flex-col items-center">
@@ -35,13 +32,14 @@ function MediChainIntro() {
           Secure, private, and in your control.
         </p>
 
-        <button
-          onClick={handleGetStarted}
-          className={`w-full py-2 sm:py-3 text-[#00796B] font-semibold rounded-full transition duration-300
+        <Link
+       to='/login'
+       
+          className={`w-full p-3 px-5 sm:py-3 text-[#00796B] font-semibold rounded-full transition duration-300
             bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2`}
         >
           Get Started
-        </button>
+        </Link>
       </div>
     </div>
   );
