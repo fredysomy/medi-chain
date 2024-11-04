@@ -62,11 +62,12 @@ const logout = (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { userUlid, username, email, age, dob, blood_group, password } =
+    req.body;
   if (!username || !email || !password) {
     return res.status(400).json({ message: "Invalid request" });
   }
-  if (User(db.sequelize).findOne({ where: { email: email } })==null) {
+  if (User(db.sequelize).findOne({ where: { email: email } }) !== null) {
     return res.status(400).json({ message: "User already exists" });
   }
 
@@ -80,8 +81,16 @@ const register = async (req, res) => {
       password: hashedPassword,
       uuid: UserULID,
       seckey: enckey,
+      age: age,
+      dob: dob,
+      blood_group: blood_group,
     });
-    const tx = contractInstance.methods.createUser(UserULID, username);
+
+
+    const tx = contractInstance.methods.createUser(
+      UserULID,
+      username,
+    );
     const receipt = await sendTransaction(tx);
     console.log("User created, transaction receipt:", receipt);
 

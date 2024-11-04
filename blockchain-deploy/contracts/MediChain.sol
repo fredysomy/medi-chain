@@ -6,6 +6,7 @@ contract MediChain {
         uint256 postId;
         string name;
         string doctor;
+        string timestamp;
         string desc;
         bytes32[] hashes;
     }
@@ -37,6 +38,7 @@ contract MediChain {
         string memory postName,
         string memory doctor,
         string memory desc,
+        string memory timestamp,
         bytes32[] memory postHashes
     ) public {
         require(bytes(users[userUlid].userUlid).length != 0, "User does not exist");
@@ -48,6 +50,7 @@ contract MediChain {
             postId: postCounter,
             name: postName,
             doctor: doctor,
+            timestamp: timestamp,
             desc: desc,
             hashes: postHashes
         });
