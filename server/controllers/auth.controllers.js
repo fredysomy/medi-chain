@@ -68,7 +68,8 @@ const register = async (req, res) => {
   if (!username || !email || !password) {
     return res.status(400).json({ message: "Invalid request" });
   }
-  if (User(db.sequelize).findOne({ where: { email: email } }) !== null) {
+  const userExists = await User(db.sequelize).findOne({ where: { email: email } });
+  if ( userExists !== null) {
     return res.status(400).json({ message: "User already exists" });
   }
 

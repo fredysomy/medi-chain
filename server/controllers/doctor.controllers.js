@@ -2,6 +2,7 @@ const User = require("../models/users");
 const Access = require("../models/doctoraccess");
 const crypto = require("crypto");
 const IV = process.env.IV;
+const web3 = require("web3");
 const pinataApiKey = process.env.PINATA_API_KEY;
 const pinataSecretApiKey = process.env.PINATA_SECRET_API_KEY;
 const encryptionKey = process.env.SEC_KEY;
@@ -13,7 +14,9 @@ const axios = require("axios");
 const uuid = require("uuid");
 const checkAccess = require("../middlewere/checkAccess");
 const { decrypt } = require("../utils/enc_and_dec");
-
+const {contractInstance, account, sendTransaction} = require("../config/web3.config");
+const { timeStamp } = require("console");
+const keccak256 = web3.utils.keccak256;
 exports.getUserById = async (req, res) => {
   console.log(req);
   const { id } = req.query;
@@ -82,8 +85,10 @@ async function uploadToPinata(fileBuffer, filename) {
 
 // Controller function to handle multiple file upload, encryption, and Pinata storage
 exports.createEntry = async (req, res) => {
-  console.log(req.user.patient);
-  const sec_key = await decrypt(req.user.patient);
+
+  const fileHashes = [];
+
+  const sec_key = await decrypt(req.user.patient.seckey);
   multer({ storage }).array("files")(req, res, async (err) => {
     try {
       if (!req.files || req.files.length === 0) {
@@ -101,16 +106,26 @@ exports.createEntry = async (req, res) => {
 
         // Upload the encrypted file to Pinata
         const ipfsHash = await uploadToPinata(encryptedData, encryptedFilename);
-
-        // Add the IPFS hash and IV to the results
+        fileHashes.push(keccak256(ipfsHash));
+        
         results.push({
           originalName: file.originalname,
           ipfsHash,
           iv: iv.toString("hex"), // Send IV for decryption
         });
       }
+      console.log(fileHashes);
+      const tx = contractInstance.methods.createPost(req.user.patient.uuid,"asdasd", req.user.displayName,Math.floor(Date.now() / 1000), "sadasdasdasd", fileHashes, );
+     
+    
 
-console.log(results)
+      const receipt = await sendTransaction(tx);
+
+      res.status(200).json({
+          message: "Post created successfully",
+          
+      });
+
     } catch (error) {
       console.error("File upload error:", error);
       res
@@ -146,5 +161,34 @@ exports.requestAccess = async (req, res) => {
   });
   if (access) {
     return res.json({ message: "Request sent" });
+  }
+};
+
+
+
+exports.getUserPosts = async (req, res) => {
+  const { userUlid } = req.query; // Assume userUlid is passed as a URL parameter
+
+  try {
+      // Get list of post IDs for the user
+      const postIds = await contractInstance.methods.getUser(userUlid).call();
+
+      // Retrieve details for each post
+      const posts = await Promise.all(postIds.map(async (postId) => {
+          const post = await contract.methods.getPost(postId).call();
+          return {
+              postId: post[0],
+              name: post[1],
+              doctor: post[2],
+              timestamp: post[3],
+              desc: post[4],
+              hashes: post[5]
+          };
+      }));
+
+      res.status(200).json({ message: "User posts retrieved successfully", posts });
+  } catch (error) {
+      console.error("Error retrieving user posts:", error);
+      res.status(500).json({ message: "Failed to retrieve user posts", error: error.message });
   }
 };

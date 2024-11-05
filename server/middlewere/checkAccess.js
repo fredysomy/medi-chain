@@ -22,7 +22,7 @@ exports.checkAccess = async (req, res, next) => {
             },
         });
         console.log(user)
-        req.user.patient=  user.dataValues.seckey;
+        req.user.patient=  user.dataValues;
         next();
     } else {
         return res.json({message:"Access denied"});
