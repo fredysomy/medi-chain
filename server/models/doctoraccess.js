@@ -65,6 +65,33 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "access_given"
+    },
+    has_access: {
+      type: DataTypes.INTEGER(1),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "has_access"
+    },
+    doc_name: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "doc_name"
+    },
+    status: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "status"
     }
   };
   const options = {
