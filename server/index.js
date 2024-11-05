@@ -24,7 +24,7 @@ const userMethodRoute = require("./routes/user_method.routes");
 const fileUploadRoute = require("./routes/file.routes");
 // Middleware
 const checkSessionUser = require("./middlewere/checkUser");
-
+const checkSessionDoctor = require("./middlewere/checkDoc")
 const sessionStore = new SequelizeStore({
   db: db.sequelize,
 });
@@ -76,7 +76,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoute);
 app.use("/api/doctor_auth", docAuthRoute);
-app.use("/api/doctor_methods", docMethodRoute);
+app.use("/api/doctor_methods", checkSessionDoctor,docMethodRoute);
 app.use("/api/user_methods", checkSessionUser, userMethodRoute);
 const multer = Multer({ storage: Multer.memoryStorage() });
 

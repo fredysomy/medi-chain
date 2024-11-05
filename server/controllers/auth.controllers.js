@@ -1,6 +1,7 @@
 const passport = require("passport");
 const checkCredentials = require("../utils/checkCredentials");
 const User = require("../models/users");
+const Doctor = require("../models/doctors");
 const db = require("../config/mysqlorm.config");
 const uuid = require("uuid");
 const { encrypt } = require("../utils/enc_and_dec");
@@ -118,13 +119,22 @@ const checkSessionExist = (req, res) => {
 
 const openidcallback = async (req, res) => {
   console.log("dfdsfsdfsdf");
-  console.log(req);
+  //console.log(req);
   const data = jwt.decode(req.authInfo);
 
   req.session.userid = req.user.id;
   req.session.email = "asdasdasdasd";
   req.session.role = "doctor";
-  console.log(data);
+  //console.log("asdasdasd",data);
+  const doctor = await Doctor(db.sequelize).findOne({ where: { email: data.email } });
+console.log(doctor)
+  if(doctor === null){
+    await Doctor(db.sequelize).create({
+      name: data.name,
+      email: data.email,
+      uuid: req.user.id,
+    });
+  }
 
   // Save the session data
   req.session.save((err) => {
