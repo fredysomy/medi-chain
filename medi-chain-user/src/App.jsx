@@ -7,7 +7,7 @@ import Login from "./pages/login";
 import ViewRecord from "./pages/viewrecords";
 import View from "./pages/Viewprofile";
 import Create from "./pages/create";
-
+import Addrecord from "./pages/Addrecord"
 function App() {
   const location = useLocation();
 
@@ -27,6 +27,7 @@ function App() {
         <Route path="/allrecords" element={<AllRecords />} />
         <Route path="/viewrecord/:id" element={<ViewRecord />} />
         <Route path="/Viewprofile" element={<View />} />
+        <Route path="/Addrecord" element={<Addrecord/>} />
       </Routes>
     </div>
   );

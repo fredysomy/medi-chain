@@ -17,7 +17,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-6">
         <Link to="/"  className="my-2 hover:text-teal-400">Home</Link>
           <Link to="/allrecords"  className="my-2 hover:text-teal-400">My Records</Link>
-          <Link to="/team"  className="my-2 hover:text-teal-400">Add Records</Link>
+          <Link to="/addrecord"  className="my-2 hover:text-teal-400">Add Records</Link>
           <Link to="/viewprofile"  className="my-2 hover:text-teal-400">Profile</Link>
           <button className="bg-white text-teal-600 px-4 py-1 rounded-md font-medium hover:bg-gray-100">
             Sign Up
@@ -44,7 +44,7 @@ const Navbar = () => {
           </button>
           <Link to="/" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Home</Link>
           <Link to="/allrecords" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">My Records</Link>
-          <Link to="/team" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Add Records</Link>
+          <Link to="/addrecord" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Add Records</Link>
           <Link to="/viewprofile" onClick={toggleMobileMenu} className="my-2 hover:text-teal-400">Profile</Link>
           <button
             onClick={toggleMobileMenu}

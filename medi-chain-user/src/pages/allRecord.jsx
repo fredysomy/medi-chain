@@ -5,6 +5,10 @@ import Record from "../Record.json"
 const AllRecords = () => {
   // State to hold the list of records
   const [records, setRecords] = useState(Record);
+console.log(records)
+const onDelete = (id) => {
+  setRecords((prevRecords) => prevRecords.filter((record) => record.id !== id));
+};
 
   return (
     <div className="flex flex-col items-center  min-h-screen p-4">
@@ -19,13 +23,15 @@ const AllRecords = () => {
         </div>
       </div>
 
-     
-      <div className="w-full max-w-md bg-white rounded-t-xl shadow-lg p-4 mt-4 flex flex-col gap-4">
+      {!records.length ? (
+          <p className='flex justify-center  font-semibold '>Not Available Record</p>
+        ):
+      (<div className="w-full max-w-md bg-white rounded-t-xl shadow-lg p-4 mt-4 flex flex-col gap-4">
         
         {records.map((record) => (
-          <Report key={record.id} {...record} />
+          <Report key={record.id} {...record} onDelete={() => onDelete(record.id)} />
         ))}
-      </div>
+      </div>)}
     </div>
   );
 };
