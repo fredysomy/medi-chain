@@ -1,9 +1,14 @@
-function checkSession(req, res, next) {
-    if (req.session && req.session.user) {
-        next();
+function checkUserRole(req, res, next) {
+    
+    
+    const user = req.session; // Assuming user information is attached to req object
+    req.user = user.passport
+    
+    if (user && user.role === 'doctor') {
+        next(); // User role is 'user', proceed to the next middleware or route handler
     } else {
-        res.status(401).send('Unauthorized: No session available');
+        res.status(403).json({ message: 'Forbidden: Insufficient permissions' });
     }
 }
 
-module.exports = checkSession;
+module.exports = checkUserRole;

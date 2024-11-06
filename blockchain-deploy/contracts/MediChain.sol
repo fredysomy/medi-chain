@@ -6,40 +6,42 @@ contract MediChain {
         uint256 postId;
         string name;
         string doctor;
+        string timestamp;
         string desc;
         bytes32[] hashes;
     }
 
     struct User {
-        bytes32 userUlid;
+        string userUlid;
         string name;
         uint256[] posts;
     }
 
-    mapping(bytes32 => User) public users; 
+    mapping(string => User) public users; // Use string for userUlid as the key
     mapping(uint256 => Post) public posts; 
     
     uint256 public postCounter; 
-    function createUser(bytes32 userUlid, string memory name) public {
-        require(users[userUlid].userUlid == 0, "User already exists");
-        
 
+    // Function to create a user with ULID as a string
+    function createUser(string memory userUlid, string memory name) public {
+        require(bytes(users[userUlid].userUlid).length == 0, "User already exists");
+        
         users[userUlid] = User({
             userUlid: userUlid,
             name: name,
-            posts: new uint256[](0)
-        });
+            posts: new uint256[](0)     });
     }
 
     // Function to create a post and associate it with a user
     function createPost(
-        bytes32 userUlid,
+        string memory userUlid,
         string memory postName,
         string memory doctor,
         string memory desc,
+        string memory timestamp,
         bytes32[] memory postHashes
     ) public {
-        require(users[userUlid].userUlid != 0, "User does not exist");
+        require(bytes(users[userUlid].userUlid).length != 0, "User does not exist");
 
         postCounter++; // Increment the postCounter for unique post ID
         
@@ -48,6 +50,7 @@ contract MediChain {
             postId: postCounter,
             name: postName,
             doctor: doctor,
+            timestamp: timestamp,
             desc: desc,
             hashes: postHashes
         });
@@ -57,8 +60,8 @@ contract MediChain {
     }
 
     // Function to get user details including the list of their posts
-    function getUser(bytes32 userUlid) public view returns (bytes32, string memory, uint256[] memory) {
-        require(users[userUlid].userUlid != 0, "User does not exist");
+    function getUser(string memory userUlid) public view returns (string memory, string memory, uint256[] memory) {
+        require(bytes(users[userUlid].userUlid).length != 0, "User does not exist");
 
         User storage user = users[userUlid];
         return (user.userUlid, user.name, user.posts); // Returning user's ULID, name, and list of post IDs
