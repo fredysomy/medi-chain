@@ -72,3 +72,13 @@ exports.revokeAccess = async (req, res) => {
     return res.json({message:"Access revoked"})
   }
 }
+
+
+exports.getAccessInfo = async (req,res) => {
+  const user_id = req.user.user.uuid;
+  const accessRequests = await db.sequelize.query(
+    `SELECT * FROM doctoraccess WHERE user_id = '${user_id}' ;`,
+    { type: db.sequelize.QueryTypes.SELECT }
+  );
+  res.json(accessRequests);
+}

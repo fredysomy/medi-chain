@@ -7,5 +7,5 @@ router.post('/update_info', userController.editInfo);
 router.get("/get/access_requests", userController.getAccessRequests);
 router.post("/update/give_access", userController.giveAccess);
 router.post("/update/revoke_access", userController.revokeAccess);
-
+router.get("/get/access_info", userController.getAccessInfo);
 module.exports = router;
