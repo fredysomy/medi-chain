@@ -237,25 +237,32 @@ exports.getUserPosts = async (req, res) => {
   }
 };
 
-
 exports.getPost = async (req, res) => {
   const { id } = req.params;
+
   try {
     const post = await contractInstance.methods.getPost(id).call();
-  
-    res.status(200).json({ message: "Post retrieved successfully", post:{ postId: post[0],
-      name: post[1],
-      doctor: post[2],
-      timestamp: post[4],
-      desc: post[3],
-      hashes: post[5],} });
+
+    // Construct URLs for each hash
+    const fileUrls = post[5].map((hash) => `http://localhost:3003/api/doctor_methods/patient/files/${hash}`);
+
+    res.status(200).json({
+      message: "Post retrieved successfully",
+      post: {
+        postId: post[0],
+        name: post[1],
+        doctor: post[2],
+        timestamp: post[4],
+        desc: post[3],
+        fileUrls: fileUrls, // Include URLs instead of raw hashes
+      },
+    });
   } catch (error) {
     console.error("Error retrieving post:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to retrieve post", error: error.message });
+    res.status(500).json({ message: "Failed to retrieve post", error: error.message });
   }
-}
+};
+
 
 function bytes32ToIPFSHash(bytes32Hash) {
   // Remove the "0x" prefix and convert to Buffer
@@ -270,24 +277,32 @@ function bytes32ToIPFSHash(bytes32Hash) {
 
 exports.getFiles = async (req, res) => {
   const { hash } = req.params;
- 
+
   try {
-    const response = await axios.get(
-      `https://gateway.pinata.cloud/ipfs/${bytes32ToIPFSHash(hash)}`,
-      { responseType: 'arraybuffer' }
-    );
-    
+    const ipfsHash = bytes32ToIPFSHash(hash);
+
+    // Fetch the encrypted file from IPFS
+    const response = await axios.get(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`, {
+      responseType: "arraybuffer",
+    });
+
     const encryptedData = Buffer.from(response.data);
     const encKey = await decrypt(req.user.patient.seckey);
     const decryptedData = decryptFile(encryptedData, encKey);
 
-    res.setHeader('Content-Type', 'application/octet-stream');
-    res.setHeader('Content-Disposition', `attachment; filename=${hash}`);
-    res.send(decryptedData);
+    // Create a Readable stream from the decrypted data
+    const stream = new Readable();
+    stream.push(decryptedData);
+    stream.push(null); // Signals the end of the stream
+
+    // Set appropriate headers for streaming content
+    res.setHeader("Content-Type", "image/png"); // Adjust based on the MIME type of the file
+    res.setHeader("Content-Disposition", `inline; filename=${hash}.png`);
+
+    // Pipe the stream to the response
+    stream.pipe(res);
   } catch (error) {
     console.error("Error retrieving document:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to retrieve document", error: error.message });
+    res.status(500).json({ message: "Failed to retrieve document", error: error.message });
   }
-}
+};
