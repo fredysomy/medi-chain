@@ -118,15 +118,17 @@ exports.createEntry = async (req, res) => {
         });
       }
       console.log(fileHashes);
+      const timestamp = Math.floor(Date.now() / 1000).toString(); // Convert to string
+
       const tx = contractInstance.methods.createPost(
         req.user.patient.uuid,
         "asdasdksadnl",
         req.user.displayName,
-        Math.floor(Date.now() / 1000),
+        "65875875875", // Pass timestamp as a string
         "sadasdasdasd",
         fileHashes
       );
-
+      console.log(tx)
       const receipt = await sendTransaction(tx);
 
       res.status(200).json({
