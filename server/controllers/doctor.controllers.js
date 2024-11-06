@@ -14,12 +14,14 @@ const axios = require("axios");
 const uuid = require("uuid");
 const checkAccess = require("../middlewere/checkAccess");
 const { decrypt } = require("../utils/enc_and_dec");
+const multihashes = require("multihashes");
+
 const {
   contractInstance,
   account,
   sendTransaction,
 } = require("../config/web3.config");
-const { timeStamp } = require("console");
+const { timeStamp, time } = require("console");
 const keccak256 = web3.utils.keccak256;
 exports.getUserById = async (req, res) => {
   console.log(req);
@@ -45,6 +47,21 @@ function encryptFile(buffer, enckey) {
   encrypted = Buffer.concat([encrypted, cipher.final()]);
 
   return { iv, encryptedData: encrypted };
+}
+
+
+
+function decryptFile(encryptedData,enckey) {
+  const decipher = crypto.createDecipheriv(
+    "aes-256-cbc",
+    Buffer.from(enckey, "hex"),
+    Buffer.from(IV, "hex")
+  );
+
+  let decrypted = decipher.update(encryptedData);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+  return decrypted;
 }
 
 // Upload encrypted file to Pinata
@@ -109,7 +126,7 @@ exports.createEntry = async (req, res) => {
 
         // Upload the encrypted file to Pinata
         const ipfsHash = await uploadToPinata(encryptedData, encryptedFilename);
-        fileHashes.push(keccak256(ipfsHash));
+        fileHashes.push(ipfsHashToBytes32(ipfsHash));
 
         results.push({
           originalName: file.originalname,
@@ -124,7 +141,7 @@ exports.createEntry = async (req, res) => {
         req.user.patient.uuid,
         "asdasdksadnl",
         req.user.displayName,
-        "65875875875", // Pass timestamp as a string
+        timestamp, // Pass timestamp as a string
         "sadasdasdasd",
         fileHashes
       );
@@ -142,6 +159,20 @@ exports.createEntry = async (req, res) => {
     }
   });
 };
+
+function ipfsHashToBytes32(ipfsHash) {
+  // Decode the Base58 IPFS hash to a Buffer
+  const decoded = multihashes.fromB58String(ipfsHash);
+
+  // The IPFS hash includes a 2-byte prefix (0x12 for SHA-256, 0x20 for length)
+  // Ensure it is SHA-256 (0x12) and 32 bytes (0x20)
+  if (decoded[0] !== 0x12 || decoded[1] !== 0x20) {
+      throw new Error("Unsupported IPFS hash format");
+  }
+
+  // Remove the first 2 bytes (prefix) to get the 32-byte hash
+  return "0x" + decoded.slice(2).toString("hex");
+}
 
 exports.requestAccess = async (req, res) => {
   const acc_id = uuid.v4();
@@ -188,9 +219,9 @@ exports.getUserPosts = async (req, res) => {
           postId: post[0],
           name: post[1],
           doctor: post[2],
-          timestamp: post[3],
-          desc: post[4],
-          hashes: post[5],
+          timestamp: post[4],
+          desc: post[3],
+
         };
       })
     );
@@ -205,3 +236,58 @@ exports.getUserPosts = async (req, res) => {
       .json({ message: "Failed to retrieve user posts", error: error.message });
   }
 };
+
+
+exports.getPost = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await contractInstance.methods.getPost(id).call();
+  
+    res.status(200).json({ message: "Post retrieved successfully", post:{ postId: post[0],
+      name: post[1],
+      doctor: post[2],
+      timestamp: post[4],
+      desc: post[3],
+      hashes: post[5],} });
+  } catch (error) {
+    console.error("Error retrieving post:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to retrieve post", error: error.message });
+  }
+}
+
+function bytes32ToIPFSHash(bytes32Hash) {
+  // Remove the "0x" prefix and convert to Buffer
+  const buffer = Buffer.from(bytes32Hash.slice(2), "hex");
+
+  // Add the IPFS SHA-256 multihash prefix (0x12, 0x20) for SHA-256 hashing
+  const prefixedHash = Buffer.concat([Buffer.from([0x12, 0x20]), buffer]);
+
+  // Convert to a Base58-encoded IPFS hash
+  return multihashes.toB58String(prefixedHash);
+}
+
+exports.getFiles = async (req, res) => {
+  const { hash } = req.params;
+ 
+  try {
+    const response = await axios.get(
+      `https://gateway.pinata.cloud/ipfs/${bytes32ToIPFSHash(hash)}`,
+      { responseType: 'arraybuffer' }
+    );
+    
+    const encryptedData = Buffer.from(response.data);
+    const encKey = await decrypt(req.user.patient.seckey);
+    const decryptedData = decryptFile(encryptedData, encKey);
+
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename=${hash}`);
+    res.send(decryptedData);
+  } catch (error) {
+    console.error("Error retrieving document:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to retrieve document", error: error.message });
+  }
+}
