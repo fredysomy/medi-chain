@@ -68,8 +68,10 @@ const register = async (req, res) => {
   if (!username || !email || !password) {
     return res.status(400).json({ message: "Invalid request" });
   }
-  const userExists = await User(db.sequelize).findOne({ where: { email: email } });
-  if ( userExists !== null) {
+  const userExists = await User(db.sequelize).findOne({
+    where: { email: email },
+  });
+  if (userExists !== null) {
     return res.status(400).json({ message: "User already exists" });
   }
 
@@ -88,11 +90,7 @@ const register = async (req, res) => {
       blood_group: blood_group,
     });
 
-
-    const tx = contractInstance.methods.createUser(
-      UserULID,
-      username,
-    );
+    const tx = contractInstance.methods.createUser(UserULID, username);
     const receipt = await sendTransaction(tx);
     console.log("User created, transaction receipt:", receipt);
 
@@ -126,19 +124,22 @@ const openidcallback = async (req, res) => {
   req.session.userid = req.user.id;
   req.session.email = "asdasdasdasd";
   req.session.role = "doctor";
-  //console.log("asdasdasd",data);
-  const doctor = await Doctor(db.sequelize).findOne({ where: { email: data.email } });
-console.log(doctor)
-  if(doctor === null){
+  console.log("asdasdasd", data);
+  const doctor = await Doctor(db.sequelize).findOne({
+    where: { email: data.unique_name },
+  });
+  console.log(doctor);
+  if (doctor === null) {
     await Doctor(db.sequelize).create({
       name: data.name,
-      email: data.email,
+      email: data.unique_name,
       uuid: req.user.id,
     });
   }
 
   // Save the session data
   req.session.save((err) => {
+    console.log(req.session);
     if (err) {
       console.error("Session save error:", err);
       return res.status(500).json({ message: "Internal server error" });

@@ -285,7 +285,7 @@ exports.getFiles = async (req, res) => {
     const response = await axios.get(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`, {
       responseType: "arraybuffer",
     });
-
+    console.log(req.user)
     const encryptedData = Buffer.from(response.data);
     const encKey = await decrypt(req.user.patient.seckey);
     const decryptedData = decryptFile(encryptedData, encKey);
