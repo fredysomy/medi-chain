@@ -204,11 +204,11 @@ exports.requestAccess = async (req, res) => {
 };
 
 exports.getUserPosts = async (req, res) => {
-  const { userUlid } = req.query; // Assume userUlid is passed as a URL parameter
+  const { user_id } = req.query; // Assume userUlid is passed as a URL parameter
 
   try {
     // Get list of post IDs for the user
-    const postIds = await contractInstance.methods.getUser(userUlid).call();
+    const postIds = await contractInstance.methods.getUser(user_id).call();
     console.log(postIds);
     // Retrieve details for each post
     const posts = await Promise.all(
@@ -276,6 +276,7 @@ function bytes32ToIPFSHash(bytes32Hash) {
 }
 
 exports.getFiles = async (req, res) => {
+  
   const { hash } = req.params;
 
   try {
