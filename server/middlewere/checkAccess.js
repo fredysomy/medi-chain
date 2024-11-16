@@ -2,7 +2,7 @@ const Access =  require("../models/doctoraccess");
 const db = require("../config/mysqlorm.config");
 const User = require("../models/users");
 exports.checkAccess = async (req, res, next) => {
-    console.log(req.body);
+    console.log(req.query);
     const {user_id} =req.query;
     const doc_id = req.user.id;
 
