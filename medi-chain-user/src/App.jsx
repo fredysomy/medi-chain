@@ -4,10 +4,11 @@ import LandingPage from './pages/Landingpage';
 import AllRecords from './pages/allRecord';
 import Navbar from './components/navbar';
 import Login from "./pages/login";
+import Addrecord from "./pages/addrecord"
 import ViewRecord from "./pages/viewrecords";
 import View from "./pages/Viewprofile";
 import Create from "./pages/create";
-import Addrecord from "./pages/Addrecord"
+
 function App() {
   const location = useLocation();
 
